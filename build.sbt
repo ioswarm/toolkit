@@ -20,6 +20,8 @@ lazy val toolkit = project.in(file("."))
   .aggregate(
     time
     , schedule
+    , mail
+    , poi
   )
 
 lazy val time = project.in(file("time"))
