@@ -33,6 +33,7 @@ trait BasicCellFormats {
       case CellType.FORMULA if c.cell.getCachedFormulaResultTypeEnum == CellType.NUMERIC =>
         c.cell.getNumericCellValue.toInt
       case CellType.BLANK => 0
+      case CellType.STRING => c.cell.getStringCellValue.toInt
       case _ => throw new IllegalArgumentException
     }
     override def write(c: Cell, t: Int): Unit = c.cell.setCellValue(t.toDouble)
@@ -98,10 +99,10 @@ trait BasicCellFormats {
 
   implicit def dateFormat = new CellFormat[Date] {
 
-    override def read(c: Cell): Date = c.cell.getCellTypeEnum match {
+    override def read(c: Cell): Date = c.cell.getDateCellValue /*c.cell.getCellTypeEnum match {
       case CellType.NUMERIC => c.cell.getDateCellValue
       case _ => throw new IllegalArgumentException
-    }
+    }*/
 
     override def write(c: Cell, t: Date): Unit = {
       val style = c.cell.getRow.getSheet.getWorkbook.createCellStyle()

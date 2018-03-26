@@ -62,6 +62,8 @@ class Workbook(workbook: POIWorkbook, wfile: Option[File]) {
     case None => new IllegalArgumentException
   }
 
+  def close(): Unit = workbook.close()
+
 }
 
 class Sheet(val workbook: Workbook, val sheet: POISheet) {
