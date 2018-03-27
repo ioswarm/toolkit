@@ -17,6 +17,10 @@ private[mail] class Folder(mailFolder: MailFolder) {
     this
   }
 
+  def ro: Folder = open()
+
+  def rw: Folder = open(MailFolder.READ_WRITE)
+
   def close(expunge: Boolean = true): Unit = mailFolder.close(expunge)
 
   def messages(): Seq[Mail] = {

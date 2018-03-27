@@ -1,9 +1,10 @@
 package de.ioswarm.toolkit.mail
 
 import java.util.Date
+
 import javax.mail.Message.RecipientType
 import javax.mail.internet.InternetAddress
-import javax.mail.{Address, Message}
+import javax.mail.{Address, Flags, Message}
 
 /**
   * Created by apape on 20.11.17.
@@ -70,7 +71,11 @@ trait Mail {
 
   def html(html: String): Mail
 
-  def attach(a: Attachment): Mail
+  def attach(a: Attachment*): Mail
+
+  def delete(): Unit
+
+  def reply(all: Boolean = false): Mail
 
 }
 
@@ -102,7 +107,11 @@ private[mail] case class MailImpl(
 
   def html(html: String): Mail = copy(htmlBody = Some(html))
 
-  def attach(a: Attachment): Mail = copy(attachments = this.attachments :+ a)
+  def attach(a: Attachment*): Mail = copy(attachments = this.attachments ++ a)
+
+  override def delete(): Unit = throw new UnsupportedOperationException
+
+  override def reply(all: Boolean = false): Mail = throw new UnsupportedOperationException
 
 }
 
@@ -140,22 +149,47 @@ private[mail] class MessageMailImpl(message: Message) extends Mail {
 
   def attachments: Seq[Attachment] = message.attachments
 
-  def from(a: InternetAddress): Mail = this
+  def from(a: InternetAddress): Mail = {
+    message.setFrom(a)
+    this
+  }
 
-  def replyTo(rpl: InternetAddress): Mail = this
+  def replyTo(rpl: InternetAddress): Mail = {
+    message.setReplyTo(Array(rpl))
+    this
+  }
 
-  def addTo(a: InternetAddress): Mail = this
+  def addTo(a: InternetAddress): Mail = {
+    message.addRecipient(RecipientType.TO, a)
+    this
+  }
 
-  def addCc(a: InternetAddress): Mail = this
+  def addCc(a: InternetAddress): Mail = {
+    message.addRecipient(RecipientType.CC, a)
+    this
+  }
 
-  def addBcc(a: InternetAddress): Mail = this
+  def addBcc(a: InternetAddress): Mail = {
+    message.setRecipient(RecipientType.BCC, a)
+    this
+  }
 
-  def subject(s: String): Mail = this
+  def subject(s: String): Mail = {
+    message.setSubject(s)
+    this
+  }
 
-  def body(s: String): Mail = this
+  def body(s: String): Mail = {
+    message.setText(s)
+    this
+  }
 
   def html(html: String): Mail = this
 
-  def attach(a: Attachment): Mail = this
+  def attach(a: Attachment*): Mail = this
+
+  override def delete(): Unit = message.setFlag(Flags.Flag.DELETED, true)
+
+  override def reply(all: Boolean = false): Mail = new MessageMailImpl(message.reply(all))
 
 }
