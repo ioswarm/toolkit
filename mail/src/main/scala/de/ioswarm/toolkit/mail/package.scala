@@ -1,9 +1,10 @@
 package de.ioswarm.toolkit
 
-import java.io.{BufferedOutputStream, File, FileOutputStream}
+import java.io.{BufferedInputStream, BufferedOutputStream, File, FileOutputStream}
+import java.nio.channels.Channels
+
 import javax.mail.internet.InternetAddress
 import javax.mail.{BodyPart, Multipart, Part}
-
 import org.apache.commons.mail.{Email, HtmlEmail, MultiPartEmail, SimpleEmail}
 
 import scala.io.Source
@@ -54,13 +55,7 @@ package object mail {
       bodyParts.filter(_.isMultipart).flatMap(_.contentPart(contentType))
 
     def saveToFile(file: File): Unit = {
-      val out = new BufferedOutputStream(new FileOutputStream(file))
-      val stream = Source.fromInputStream(part.getInputStream())
-      try {
-        stream.foreach( out.write(_) )
-      } finally {
-        out.close()
-      }
+      new FileOutputStream(file).getChannel.transferFrom(Channels.newChannel(part.getInputStream), 0, Long.MaxValue)
     }
   }
 
