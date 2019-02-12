@@ -83,7 +83,9 @@ class Sheet(val workbook: Workbook, val sheet: POISheet) {
     if (index >= min && index <= max)
       new Row(this, sheet.getRow(index))
     else
-      new Row(this, sheet.createRow(index))
+      createRow(index)
+
+  def createRow(index: Int): Row = new Row(this, sheet.createRow(index))
 
   def min: Int = sheet.getFirstRowNum
   def max: Int = sheet.getLastRowNum
