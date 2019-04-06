@@ -58,11 +58,14 @@ trait Mail {
 
   def replyTo(rpl: InternetAddress): Mail
 
+//  def tos(a: InternetAddress*): Mail
   def addTo(a: InternetAddress): Mail
   def :+(a: InternetAddress): Mail = addTo(a)
 
+//  def ccs(a: InternetAddress*): Mail
   def addCc(a: InternetAddress): Mail
 
+//  def bccs(a: InternetAddress*): Mail
   def addBcc(a: InternetAddress): Mail
 
   def subject(s: String): Mail
