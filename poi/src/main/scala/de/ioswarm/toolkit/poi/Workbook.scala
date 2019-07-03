@@ -36,7 +36,7 @@ object Workbook {
   def open(s: String): Workbook = apply(s)
 
 }
-class Workbook(workbook: POIWorkbook, wfile: Option[File]) {
+class Workbook(val workbook: POIWorkbook, wfile: Option[File]) {
 
   import scala.collection.JavaConverters._
 
