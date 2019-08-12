@@ -82,7 +82,7 @@ trait Mail {
 
 }
 
-private[mail] case class MailImpl(
+case class MailImpl(
                                  from: InternetAddress
                                  , replyTo: Option[InternetAddress]
                                  , to: Seq[InternetAddress]
@@ -118,7 +118,7 @@ private[mail] case class MailImpl(
 
 }
 
-private[mail] class MessageMailImpl(message: Message) extends Mail {
+class MessageMailImpl(val message: Message) extends Mail {
 
 
 
