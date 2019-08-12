@@ -26,7 +26,7 @@ trait Attachment {
   def saveToFile(file: File): File
 
 }
-private[mail] class PartAttachmentImpl(part: Part) extends Attachment {
+class PartAttachmentImpl(part: Part) extends Attachment {
 
   def filename: String = {
     val decode = MimeUtility.decodeText(part.getFileName)
@@ -48,7 +48,7 @@ private[mail] class PartAttachmentImpl(part: Part) extends Attachment {
 
 }
 
-private[mail] class FileAttachmentImpl(val file: File) extends Attachment {
+class FileAttachmentImpl(val file: File) extends Attachment {
 
   def filename: String = file.getName
   def size: Int = file.length().toInt
