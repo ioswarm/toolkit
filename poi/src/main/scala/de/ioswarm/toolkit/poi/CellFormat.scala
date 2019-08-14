@@ -165,4 +165,19 @@ trait BasicCellFormats {
 
   }
 
+  implicit def optionCellFormat[T](implicit fmt: CellFormat[T]): CellFormat[Option[T]] = new CellFormat[Option[T]] {
+
+    override def read(c: Cell): Option[T] = try {
+      Some(c.as[T])
+    } catch {
+      case t: Throwable =>
+        None
+    }
+
+    override def write(c: Cell, t: Option[T]): Unit = t match {
+      case Some(tx) => c.set(tx)
+      case None => c.cell.setCellType(CellType.BLANK)
+    }
+  }
+
 }
